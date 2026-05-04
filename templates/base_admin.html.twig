@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Uli y los Cómplices Fantasmas{% endblock %}</title>
+
+    <!-- Tailwind (CDN para empezar rápido) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="bg-black text-white font-[Poppins]">
+    <!-- CONTENIDO -->
+
+    {% if app.user %}
+        <span class="text-gray-400 text-sm flex justify-center items-center mb-8">
+            {{ app.user.userIdentifier }}
+        </span>
+    {% endif %}
+    
+    
+
+    {% block body %}{% endblock %}
+
+</body>
+</html>

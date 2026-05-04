@@ -1,0 +1,281 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    {% set highlightId = app.request.get('highlight') %}
+
+    <section class="bg-black text-white py-16 mt-20">
+        <div class="max-w-4xl mx-auto px-4">
+
+            <!-- TITULO -->
+            <h2 class="text-3xl font-bold mb-10 text-center">
+                Opiniones de nuestros clientes
+            </h2>
+
+            <!-- FORM -->
+            <div class="bg-gray-900 p-6 rounded-xl shadow-lg mb-12">
+
+                {{ form_start(form) }}
+
+                <div class="space-y-6">
+
+                    <!-- NOMBRE -->
+                    <div>
+                        {{ form_label(form.nombre, 'Tu nombre') }}
+                        {{ form_widget(form.nombre, {
+                            attr: {
+                                class: 'w-full mt-2 p-3 rounded bg-black border border-gray-700 focus:border-purple-500 outline-none'
+                            }
+                        }) }}
+                    </div>
+
+                    <!-- ESTRELLAS -->
+                    <div>
+                        <label class="block mb-2">Puntuación</label>
+
+                        <div id="stars" class="flex gap-2 text-4xl cursor-pointer justify-center">
+                            {% for i in 1..5 %}
+                                <span data-value="{{ i }}" class="star text-gray-600">★</span>
+                            {% endfor %}
+                        </div>
+
+                        {{ form_widget(form.puntuacion, {'attr': {'class': 'hidden'}}) }}
+                    </div>
+
+                    <!-- MENSAJE -->
+                    <div>
+                        {{ form_label(form.mensaje, 'Tu comentario') }}
+                        {{ form_widget(form.mensaje, {
+                            attr: {
+                                class: 'w-full mt-2 p-3 rounded bg-black border border-gray-700 focus:border-purple-500 outline-none h-28 resize-none'
+                            }
+                        }) }}
+                    </div>
+
+                    <!-- BOTON -->
+                    <button class="w-full bg-purple-600 hover:bg-purple-700 transition py-3 rounded-lg font-semibold text-lg">
+                        Enviar comentario
+                    </button>
+
+                </div>
+
+                {{ form_end(form) }}
+            </div>
+
+            <!-- LISTADO -->
+            <h3 class="text-2xl mb-6">Lo que dicen</h3>
+
+            <div class="space-y-6">
+
+                {% for message in app.flashes('success') %}
+                    <div class="bg-green-600 text-white p-4 rounded-lg mb-6 text-center animate-fade-in">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+
+                <input type="text"
+                id="buscador"
+                placeholder="Buscar por nombre o comentario..."
+                class="w-full mb-6 p-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-purple-500">
+
+                {% for comentario in comentarios %}
+                    <div class="bg-gray-900 p-5 rounded-xl border border-gray-800 hover:border-purple-500 transition comentario-item
+                        {% if highlightId == comentario.id %} ring-2 ring-purple-500 shadow-lg shadow-purple-500/30 {% endif %}"
+                        
+                        data-nombre="{{ comentario.nombre|lower }}"
+                        data-mensaje="{{ comentario.mensaje|lower }}"
+                        
+                        {% if highlightId == comentario.id %}
+                            id="comentario-destacado"
+                        {% endif %}
+                    >
+
+                        <div class="flex justify-between items-center mb-2">
+                            <strong class="text-lg">{{ comentario.nombre }}</strong>
+
+                            <!-- estrellas visuales -->
+                            <div class="text-yellow-400">
+                                {% for i in 1..5 %}
+                                    {% if i <= comentario.puntuacion %}
+                                        ★
+                                    {% else %}
+                                        <span class="text-gray-600">★</span>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <p class="text-gray-300 mt-2">
+                            {{ comentario.mensaje }}
+                        </p>
+
+                        <small class="text-gray-400 mt-2 block">
+                            {% set diff = comentario.fechaPublicacion.diff(date()) %}
+                            {% if diff.y > 0 %}
+                                Hace {{ diff.y }} año{{ diff.y > 1 ? 's' : '' }}
+                            {% elseif diff.m > 0 %}
+                                Hace {{ diff.m }} mes{{ diff.m > 1 ? 'es' : '' }}
+                            {% elseif diff.d > 0 %}
+                                Hace {{ diff.d }} día{{ diff.d > 1 ? 's' : '' }}
+                            {% elseif diff.h > 0 %}
+                                Hace {{ diff.h }} hora{{ diff.h > 1 ? 's' : '' }}
+                            {% elseif diff.i > 0 %}
+                                Hace {{ diff.i }} minuto{{ diff.i > 1 ? 's' : '' }}
+                            {% else %}
+                                Hace unos segundos
+                            {% endif %}
+                        </small>
+
+                    </div>
+                {% else %}
+                    <p class="text-gray-400">No hay comentarios todavía</p>
+                {% endfor %}
+            </div>
+
+            <!-- ❌ SIN RESULTADOS -->
+            <p id="noResultados"
+            class="text-center text-gray-400 mt-6 hidden">
+                No se encontraron en los comentarios
+            </p>
+
+        </div>
+    </section>
+
+    <!-- JS -->
+    <script>
+        const stars = document.querySelectorAll('.star');
+        const input = document.querySelector('#comentario_puntuacion');
+
+        let currentValue = 0;
+
+        stars.forEach(star => {
+
+            star.addEventListener('mouseover', () => {
+                const val = star.dataset.value;
+
+                stars.forEach(s => {
+                    s.classList.toggle('text-yellow-400', s.dataset.value <= val);
+                    s.classList.toggle('scale-110', s.dataset.value <= val);
+                });
+            });
+
+            star.addEventListener('mouseout', () => {
+                stars.forEach(s => {
+                    s.classList.toggle('text-yellow-400', s.dataset.value <= currentValue);
+                    s.classList.toggle('scale-110', s.dataset.value <= currentValue);
+                });
+            });
+
+            star.addEventListener('click', () => {
+                currentValue = star.dataset.value;
+                input.value = currentValue;
+            });
+        });
+        setTimeout(() => {
+            document.querySelectorAll('.bg-green-600').forEach(el => {
+                el.style.opacity = '0';
+                setTimeout(() => el.remove(), 300);
+            });
+        }, 3000);
+
+        const buscador = document.getElementById('buscador');
+        const comentarios = document.querySelectorAll('.comentario-item');
+        const mensaje = document.getElementById('noResultados');
+
+        buscador.addEventListener('input', function() {
+
+            const texto = this.value.toLowerCase();
+            let visibles = 0;
+
+            comentarios.forEach(item => {
+
+                const nombre = item.dataset.nombre;
+                const mensajeTxt = item.dataset.mensaje;
+
+                if (nombre.includes(texto) || mensajeTxt.includes(texto)) {
+                    item.classList.remove('hidden');
+
+                    // animación entrada
+                    item.classList.remove('opacity-0', 'scale-95');
+                    item.classList.add('opacity-100', 'scale-100');
+
+                    visibles++;
+                } else {
+                    item.classList.add('opacity-0', 'scale-95');
+
+                    setTimeout(() => {
+                        item.classList.add('hidden');
+                    }, 200);
+                }
+
+            });
+
+            if (visibles === 0) {
+                mensaje.classList.remove('hidden');
+            } else {
+                mensaje.classList.add('hidden');
+            }
+
+        });
+        document.addEventListener("DOMContentLoaded", () => {
+            const destacado = document.getElementById("comentario-destacado");
+
+            if (destacado) {
+                setTimeout(() => {
+                    destacado.scrollIntoView({
+                        behavior: "smooth",
+                        block: "center"
+                    });
+
+                    // efecto pulso
+                    destacado.classList.add("scale-105");
+
+                    setTimeout(() => {
+                        destacado.classList.remove("scale-105");
+                    }, 1500);
+
+                }, 300);
+
+                setTimeout(() => {
+                    destacado.classList.remove(
+                        "ring-2",
+                        "ring-purple-500",
+                        "shadow-lg",
+                        "shadow-purple-500/30"
+                    );
+                }, 4000);
+            }
+        });
+    </script>
+
+    <style>
+        .star {
+            transition: all 0.2s ease;
+        }
+
+        .star:hover {
+            transform: scale(1.2);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease;
+        }
+
+        .scale-105 {
+            transform: scale(1.05);
+            transition: transform 0.4s ease;
+        }
+    </style>
+
+{% endblock %}

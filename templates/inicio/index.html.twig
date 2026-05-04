@@ -1,0 +1,96 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+
+    <section class="relative h-screen">
+
+        <div class="absolute inset-0 
+                    bg-cover 
+                    bg-right 
+                    bg-[position:80%_20%] 
+                    md:bg-[position:80%_25%] 
+                    lg:bg-[position:80%_30%]"
+            style="background-image: url('{{ asset('imagenes/portada_inicio.png') }}');">
+        </div>
+
+        <div class="relative z-10 flex items-center h-full px-4 md:px-10">
+
+            <div class="max-w-xl text-white">
+                <h1 class="text-3xl md:text-5xl lg:text-6xl font-bold mb-6">
+                    Uli y Los Cómplices Fantasmas
+                </h1>
+
+                <p class="text-base md:text-xl mb-8">
+                    La banda que transforma tu evento en una noche inolvidable
+                </p>
+
+                <a href="{{ path('contacto') }}"
+                class="bg-gradient-to-r from-purple-500 to-pink-500 
+                        px-6 md:px-8 py-3 md:py-4 
+                        rounded-full text-base md:text-lg font-semibold text-white
+                        transition-all duration-300 transform
+                        hover:scale-110 hover:shadow-[0_0_25px_rgba(236,72,153,0.7)]
+                        active:scale-95">
+                    CONTRATAR BANDA
+                </a>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <section class="py-16 bg-black text-white text-center">
+        <div class="max-w-3xl mx-auto">
+            <p class="text-lg">
+                Somos una banda versátil con amplia experiencia en eventos, brindando shows únicos, inolvidables y adaptados a cada ocasión.<br>
+                ¿Por qué elegirnos?<br>
+                ✔ Experiencia en todo tipo de eventos<br>
+                ✔ Repertorio variado<br>
+                ✔ Sonido profesional<br>
+                ✔ Adaptación al cliente
+            </p>
+        </div>
+    </section>
+
+
+    <section class="py-16 bg-gray-900 text-white">
+        <div class="max-w-6xl mx-auto px-4">
+
+            <h2 class="text-3xl font-bold text-center mb-10">
+                Tipos de Eventos
+            </h2>
+
+            <div class=" grid grid-cols-1 md:grid-cols-3 gap-6">
+
+                {% for evento in eventos %}
+                    <div class="{% if loop.last %}md:col-start-2{% endif %}">
+
+                        <div class="relative h-48 bg-cover bg-center rounded-lg overflow-hidden"
+                            style="background-image: url('{{ asset('imagenes/' ~ evento.foto) }}');">
+
+                            <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
+                                <h3 class="text-xl font-bold text-white">{{ evento.nombre }}</h3>
+                            </div>
+
+                        </div>
+
+                        <div class="bg-black text-white text-center p-4 rounded-b-lg">
+                            <p class="text-sm">{{ evento.info }}</p>
+                        </div>
+
+                    </div>
+                {% endfor %}
+
+            </div>
+        </div>
+    </section>
+
+    <section class="py-16 bg-black text-center">
+        <a href="{{ path('galeria') }}" class="bg-purple-600 hover:bg-purple-700 text-white px-8 py-4 rounded-lg text-xl font-bold">
+            Mirá nuestra galería
+        </a>
+    </section>
+
+{% endblock %}

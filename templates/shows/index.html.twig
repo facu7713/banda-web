@@ -1,0 +1,125 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <section class="bg-black text-white py-16 px-6 mt-10">
+
+        <!-- TITULO -->
+        <section class="relative h-[60vh] bg-cover bg-center flex items-center justify-center"
+        style="background-image: url('{{ asset('imagenes/shows_portada.png') }}');">
+
+        <!-- OVERLAY -->
+        <div class="absolute inset-0 bg-black/60"></div>
+
+        <!-- CONTENIDO -->
+        <div class="relative z-10 text-center px-4">
+
+            <h1 class="text-4xl md:text-6xl font-bold text-white mb-4">
+                Shows
+            </h1>
+
+            <p class="text-lg md:text-xl text-gray-300">
+                Viví la experiencia, música, energía y una experiencia que transforma tu evento
+            </p>
+
+        </div>
+
+    </section>
+
+    <div class="max-w-5xl mx-auto mt-10">
+
+        <!-- 🔥 PROXIMOS -->
+        <h2 class="text-2xl font-semibold mb-6 text-purple-400">
+            Próximos eventos
+        </h2>
+
+        <div class="grid grid-cols-5 gap-4 text-xs tracking-widest text-purple-400 mb-2 px-2">
+            <div>Evento</div>
+            <div>Fecha</div>
+            <div>Hora</div>
+            <div>Lugar</div>
+            <div>Ciudad</div>
+        </div>
+
+        <div class="space-y-4 mb-16">
+
+            {% for show in proximos %}
+                <div class="grid grid-cols-5 gap-2 md:gap-4 bg-gray-900 p-2 md:p-4 rounded-lg border border-gray-700 text-xs md:text-base">
+
+                    <div class="font-semibold text-white">
+                        {{ show.evento.nombre }}
+                    </div>
+
+                    <div class="font-semibold text-white">
+                        {{ show.fecha|date('d/m/Y') }}
+                    </div>
+
+                    <div class="text-gray-400">
+                        {{ show.fecha|date('H:i') }}
+                    </div>
+
+                    <div>
+                        {{ show.lugar }}
+                    </div>
+
+                    <div class="text-gray-400">
+                        {{ show.ciudad }}
+                    </div>
+
+                </div>
+            {% else %}
+                <p class="text-gray-500">No hay próximos eventos</p>
+            {% endfor %}
+
+        </div>
+
+        <!-- ⚪ REALIZADOS -->
+        <h2 class="text-2xl font-semibold mb-6 text-gray-400">
+            Eventos realizados
+        </h2>
+
+        <div class="grid grid-cols-5 gap-4 text-xs tracking-widest text-purple-400 mb-2 px-2">
+            <div>Evento</div>    
+            <div>Fecha</div>
+            <div>Hora</div>
+            <div>Lugar</div>
+            <div>Ciudad</div>
+        </div>
+
+        <div class="space-y-4 mb-16">
+
+            {% for show in realizados %}
+                <div class="grid grid-cols-5 gap-2 md:gap-4 bg-gray-900 p-2 md:p-4 rounded-lg border border-gray-700 text-xs md:text-base">
+
+                    <div class="font-semibold text-white">
+                        {{ show.evento.nombre }}
+                    </div>
+
+                    <div class="font-semibold text-white">
+                        {{ show.fecha|date('d/m/Y') }}
+                    </div>
+
+                    <div class="text-gray-400">
+                        {{ show.fecha|date('H:i') }}
+                    </div>
+
+                    <div>
+                        {{ show.lugar }}
+                    </div>
+
+                    <div class="text-gray-400">
+                        {{ show.ciudad }}
+                    </div>
+
+                </div>
+            {% else %}
+                <p class="text-gray-500">No hay eventos realizados</p>
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

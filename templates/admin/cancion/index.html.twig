@@ -1,0 +1,109 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}Admin | Uli y los Cómplices Fantasmas{% endblock %}
+
+{% block body %}
+
+    <section class="min-h-screen bg-black text-white px-4 md:px-8 py-10">
+
+        <div class="max-w-6xl mx-auto">
+
+            <!-- VOLVER -->
+            <a href="{{ path('admin') }}"
+                class="text-purple-400 hover:text-purple-300 transition mb-6 inline-block">
+                ← Volver al panel
+            </a>
+
+            <!-- HEADER -->
+            <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-8 gap-4">
+
+                <h1 class="text-3xl md:text-4xl font-bold tracking-wide">
+                    Gestión de Canciones
+                </h1>
+
+                <a href="{{ path('admin_cancion_new') }}"
+                    class="bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-3 rounded-lg font-semibold shadow-lg hover:scale-105 hover:shadow-xl transition-all duration-300 text-center">
+                    + Nueva Canción
+                </a>
+
+            </div>
+
+            <!-- TABLA -->
+            <div class="overflow-x-auto rounded-xl border border-gray-800 shadow-lg">
+
+                <table class="w-full text-sm md:text-base">
+
+                    <!-- HEAD -->
+                    <thead class="bg-gray-900 text-gray-300 uppercase text-xs tracking-wider">
+                        <tr>
+                            <th class="p-4 text-left">Nombre</th>
+                            <th class="p-4 text-left">Tipo</th>
+                            <th class="p-4 text-center">Audio</th>
+                            <th class="p-4 text-center">Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <!-- BODY -->
+                    <tbody>
+
+                    {% for cancion in canciones %}
+                        <tr class="border-t border-gray-800 hover:bg-gray-900 transition">
+
+                            <td class="p-4 font-semibold">
+                                {{ cancion.nombre }}
+                            </td>
+
+                            <td class="p-4 text-gray-300">
+                                {{ cancion.tipo }}
+                            </td>
+
+                            <!-- AUDIO -->
+                            <td class="p-4 text-center">
+                                {% if cancion.audio %}
+                                    <audio controls controlsList="nodownload" preload="metadata" class="w-100 mx-auto">
+                                        <source src="{{ asset('uploads/cancion/' ~ cancion.audio) }}">
+                                    </audio>
+                                {% else %}
+                                    <span class="text-gray-500">Sin audio</span>
+                                {% endif %}
+                            </td>
+
+                            <!-- ACCIONES -->
+                            <td class="p-4 flex justify-center gap-4">
+
+                                <a href="{{ path('admin_cancion_edit', { id: cancion.id}) }}"
+                                    class="bg-blue-600 px-3 py-1 rounded-md text-white text-sm hover:bg-blue-700 transition">
+                                    Editar
+                                </a>
+
+                                <a href="{{ path('admin_cancion_delete', { id: cancion.id}) }}"
+                                    onclick="return confirm('¿Seguro que querés eliminar esta canción?')"
+                                    class="bg-red-600 px-3 py-1 rounded-md text-white text-sm hover:bg-red-700 transition">
+                                    Eliminar
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+                    {% else %}
+
+                        <tr>
+                            <td colspan="5" class="p-6 text-center text-gray-500">
+                                No hay canciones cargadas
+                            </td>
+                        </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </section>
+
+{% endblock %}

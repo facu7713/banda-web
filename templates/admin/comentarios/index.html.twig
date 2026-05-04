@@ -1,0 +1,170 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}Admin | Uli y los Cómplices Fantasmas{% endblock %}
+
+{% block body %}
+
+    <section class="bg-black text-white py-16">
+        <div class="max-w-6xl mx-auto px-4">
+            <!-- VOLVER -->
+            <a href="{{ path('admin') }}"
+                class="text-purple-400 hover:text-purple-300 transition mb-6 inline-block">
+                ← Volver al panel
+            </a>
+
+            <h2 class="text-3xl font-bold mb-10 text-center">
+                Panel de Comentarios
+            </h2>
+
+            <div class="space-y-4">
+
+                {% for message in app.flashes('danger') %}
+                    <div class="bg-red-400 text-white p-4 rounded-lg mb-6 text-center animate-fade-in">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+
+                <input type="text"
+                id="buscador"
+                placeholder="Buscar por nombre o comentario..."
+                class="w-full mb-6 p-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-purple-500">
+
+                {% for comentario in comentarios %}
+                    <div class="bg-gray-900 p-5 rounded-lg border 
+                        {{ comentario.visible ? 'border-green-500' : 'border-red-500' }}
+                        comentario-item transition-all duration-300"
+
+                        data-nombre="{{ comentario.nombre|lower }}"
+                        data-mensaje="{{ comentario.mensaje|lower }}">
+
+                        <!-- HEADER -->
+                        <div class="flex justify-between items-center">
+                            <strong>{{ comentario.nombre }}</strong>
+
+                            <span>
+                                {% if comentario.visible %}
+                                    <span class="text-green-400">Visible</span>
+                                {% else %}
+                                    <span class="text-red-400">Oculto</span>
+                                {% endif %}
+                            </span>
+                        </div>
+
+                        <!-- MENSAJE -->
+                        <p class="mt-2 text-gray-300">
+                            {{ comentario.mensaje }}
+                        </p>
+
+                        <!-- ESTRELLAS -->
+                        <div class="mt-2">
+                            {% for i in 1..5 %}
+                                <span class="{{ i <= comentario.puntuacion ? 'text-yellow-400' : 'text-gray-600' }}">★</span>
+                            {% endfor %}
+                        </div>
+
+                        <!-- FECHA -->
+                        <small class="text-gray-500 block mt-2">
+                            {{ comentario.fechaPublicacion|date('d/m/Y H:i') }}
+                        </small>
+
+                        <!-- BOTONES -->
+                        <div class="mt-4 flex gap-4">
+
+                            <a href="{{ path('admin_comentario_toggle', {id: comentario.id}) }}"
+                            class="bg-yellow-500 hover:bg-yellow-600 px-4 py-2 rounded transition">
+                                {{ comentario.visible ? 'Ocultar' : 'Mostrar' }}
+                            </a>
+
+                            <a href="{{ path('admin_comentario_delete', {id: comentario.id}) }}"
+                            onclick="return confirm('¿Eliminar comentario?')"
+                            class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded transition">
+                                Eliminar
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                {% else %}
+                    <p class="text-center text-gray-400">No hay comentarios</p>
+                {% endfor %}
+
+            </div>
+
+            <!-- ❌ SIN RESULTADOS -->
+            <p id="noResultados"
+            class="text-center text-gray-400 mt-6 hidden">
+                No se encontraron comentarios
+            </p>
+
+        </div>
+    </section>
+
+    <!-- JS -->
+    <script>
+        const buscador = document.getElementById('buscador');
+        const comentarios = document.querySelectorAll('.comentario-item');
+        const mensaje = document.getElementById('noResultados');
+
+        buscador.addEventListener('input', function() {
+
+            const texto = this.value.toLowerCase();
+            let visibles = 0;
+
+            comentarios.forEach(item => {
+
+                const nombre = item.dataset.nombre;
+                const mensajeTxt = item.dataset.mensaje;
+
+                if (nombre.includes(texto) || mensajeTxt.includes(texto)) {
+                    item.classList.remove('hidden');
+
+                    // animación entrada
+                    item.classList.remove('opacity-0', 'scale-95');
+                    item.classList.add('opacity-100', 'scale-100');
+
+                    visibles++;
+                } else {
+                    item.classList.add('opacity-0', 'scale-95');
+
+                    setTimeout(() => {
+                        item.classList.add('hidden');
+                    }, 200);
+                }
+
+            });
+
+            if (visibles === 0) {
+                mensaje.classList.remove('hidden');
+            } else {
+                mensaje.classList.add('hidden');
+            }
+
+        });
+        setTimeout(() => {
+            document.querySelectorAll('.bg-red-400').forEach(el => {
+                el.style.opacity = '0';
+                setTimeout(() => el.remove(), 300);
+            });
+        }, 3000);
+    </script>
+
+    <style>
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease;
+        }
+    </style>
+
+{% endblock %}

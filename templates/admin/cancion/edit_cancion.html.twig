@@ -1,0 +1,79 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block body %}
+
+    <section class="min-h-screen bg-black text-white px-4 md:px-8 py-10">
+
+        <div class="max-w-2xl mx-auto">
+
+            <!-- VOLVER -->
+            <a href="{{ path('admin_cancion') }}"
+                class="text-purple-400 hover:text-purple-300 transition mb-6 inline-block">
+                ← Volver a canciones
+            </a>
+
+            <!-- TITULO -->
+            <h1 class="text-3xl md:text-4xl font-bold mb-8">
+                Editar Canción
+            </h1>
+
+            <!-- FORM -->
+            <div class="bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-800">
+
+                {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
+
+                    <!-- NOMBRE -->
+                    <div class="mb-5">
+                        <label class="block mb-2 text-sm text-gray-400">Nombre</label>
+                        {{ form_widget(form.nombre, {
+                            attr: {
+                                class: 'w-full p-3 rounded-lg bg-black border border-gray-700 focus:outline-none focus:border-purple-500'
+                            }
+                        }) }}
+                    </div>
+
+                    <!-- AUDIO ACTUAL -->
+                    {% if cancion.audio %}
+                        <div class="mb-5">
+                            <p class="text-sm text-gray-400 mb-2">Audio actual</p>
+                            <audio controls controlsList="nodownload" preload="metadata" class="w-full">
+                                <source src="{{ asset('uploads/cancion/' ~ cancion.audio) }}">
+                            </audio>
+                        </div>
+                    {% endif %}
+
+                    <!-- NUEVO AUDIO -->
+                    <div class="mb-5">
+                        <label class="block mb-2 text-sm text-gray-400">Reemplazar audio</label>
+                        {{ form_widget(form.audio, {
+                            attr: {
+                                class: 'w-full p-3 rounded-lg bg-black border border-gray-700 file:bg-purple-600 file:border-0 file:px-4 file:py-2 file:text-white file:rounded-md'
+                            }
+                        }) }}
+                    </div>
+
+                    <!-- TIPO -->
+                    <div class="mb-6">
+                        <label class="block mb-2 text-sm text-gray-400">Tipo</label>
+                        {{ form_widget(form.tipo, {
+                            attr: {
+                                class: 'w-full p-3 rounded-lg bg-black border border-gray-700 focus:outline-none focus:border-purple-500'
+                            }
+                        }) }}
+                    </div>
+
+                    <!-- BOTÓN -->
+                    <button
+                        class="w-full bg-gradient-to-r from-purple-500 to-pink-500 py-3 rounded-lg font-semibold text-lg hover:scale-105 transition-all duration-300 shadow-lg">
+                        Guardar Cambios
+                    </button>
+
+                {{ form_end(form) }}
+
+            </div>
+
+        </div>
+
+    </section>
+
+{% endblock %}

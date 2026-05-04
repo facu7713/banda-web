@@ -1,0 +1,112 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block body %}
+
+    <section class="min-h-screen bg-black text-white px-4 md:px-8 py-10">
+
+        <div class="max-w-6xl mx-auto">
+
+            <!-- VOLVER -->
+            <a href="{{ path('admin') }}"
+                class="text-purple-400 hover:text-purple-300 transition mb-6 inline-block">
+                ← Volver al panel
+            </a>
+
+            <!-- HEADER -->
+            <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-8 gap-4">
+
+                <h1 class="text-3xl md:text-4xl font-bold">
+                    Gestión de Videos
+                </h1>
+
+                <a href="{{ path('admin_video_new') }}"
+                    class="bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-3 rounded-lg font-semibold shadow-lg hover:scale-105 transition">
+                    + Nuevo Video
+                </a>
+
+            </div>
+
+            <!-- TABLA -->
+            <div class="overflow-x-auto rounded-xl border border-gray-800">
+
+                <table class="w-full text-sm md:text-base">
+
+                    <!-- HEAD -->
+                    <thead class="bg-gray-900 text-gray-300 uppercase text-xs">
+                        <tr>
+                            <th class="p-4 text-left">Nombre</th>
+                            <th class="p-4 text-left">Fecha</th>
+                            <th class="p-4 text-left">Preview</th>
+                            <th class="p-4 text-center">Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <!-- BODY -->
+                    <tbody>
+
+                    {% for video in videos %}
+                        <tr class="border-t border-gray-800 hover:bg-gray-900 transition">
+
+                            <!-- NOMBRE -->
+                            <td class="p-4 font-semibold">
+                                {{ video.nombre }}
+                            </td>
+
+                            <!-- FECHA -->
+                            <td class="p-4 text-gray-400">
+                                {{ video.fecha ? video.fecha|date('d/m/Y') : '-' }}
+                            </td>
+
+                            <!-- PREVIEW -->
+                            <td class="p-4">
+                                {% set videoId = video.url|replace({
+                                    'https://www.youtube.com/watch?v=': '',
+                                    'https://youtu.be/': ''
+                                })|split('&')[0] %}
+                                <iframe 
+                                    class="w-40 h-24 rounded"
+                                    src="https://www.youtube.com/embed/{{ videoId }}"
+                                    frameborder="0"
+                                    allowfullscreen>
+                                </iframe>
+                            </td>
+
+                            <!-- ACCIONES -->
+                            <td class="p-4 flex justify-center gap-4">
+
+                                <!-- EDITAR -->
+                                <a href="{{ path('admin_video_edit', { id: video.id}) }}"
+                                    class="bg-blue-600 px-3 py-1 rounded text-white text-sm hover:bg-blue-700">
+                                    Editar
+                                </a>
+
+                                <!-- ELIMINAR -->
+                                <a href="{{ path('admin_video_delete', { id: video.id}) }}"
+                                    onclick="return confirm('¿Seguro que querés eliminar este video?')"
+                                    class="bg-red-600 px-3 py-1 rounded text-white text-sm hover:bg-red-700">
+                                    Eliminar
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+                    {% else %}
+                        <tr>
+                            <td colspan="4" class="p-6 text-center text-gray-500">
+                                No hay videos cargados
+                            </td>
+                        </tr>
+                    {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </section>
+
+{% endblock %}

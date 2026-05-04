@@ -1,0 +1,56 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}Admin | Uli y los Cómplices Fantasmas{% endblock %}
+
+{% block body %}
+
+    <section class="bg-black text-white min-h-screen px-6 py-10">
+
+        <!-- VOLVER -->
+            <a href="{{ path('admin') }}"
+                class="text-purple-400 hover:text-purple-300 transition mb-6 inline-block">
+                ← Volver al panel
+            </a>
+
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold">Fotos</h1>
+
+            <a href="{{ path('admin_foto_new') }}"
+                class="bg-purple-600 px-4 py-2 rounded-lg hover:bg-purple-700">
+                + Nueva Foto
+            </a>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+
+            {% for foto in fotos %}
+                <div class="relative group">
+
+                    <img src="{{ asset('uploads/fotos/' ~ foto.imagen) }}"
+                            class="rounded-lg w-full h-40 object-cover">
+
+                    <!-- overlay -->
+                    <div class="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition flex flex-col justify-center items-center">
+
+                        <a href="{{ path('admin_foto_edit', { id: foto.id}) }}"
+                            class="text-blue-400 mb-2">Editar</a>
+
+                        <a href="{{ path('admin_foto_delete', { id: foto.id}) }}"
+                            onclick="return confirm('¿Seguro que querés eliminar esta foto?')"
+                            class="text-red-400"
+                            onclick="return confirm('¿Eliminar foto?')">
+                            Eliminar
+                        </a>
+
+                    </div>
+
+                </div>
+            {% else %}
+                <p>No hay fotos</p>
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+{% endblock %}

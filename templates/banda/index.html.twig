@@ -1,0 +1,109 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+
+    <section class="bg-black text-white py-16 px-6 mt-10">
+
+            <!-- TITULO -->
+            <section class="relative h-[60vh] bg-cover bg-center flex items-center justify-center"
+            style="background-image: url('{{ asset('imagenes/La_Banda.jpeg') }}');">
+
+            <!-- OVERLAY -->
+            <div class="absolute inset-0 bg-black/60"></div>
+
+            <!-- CONTENIDO -->
+            <div class="relative z-10 text-center px-4">
+
+                <h1 class="text-4xl md:text-6xl font-bold text-white mb-4">
+                    La Banda
+                </h1>
+
+                <p class="text-lg md:text-xl text-gray-300">
+                    Música en vivo • Energía • Fiesta asegurada
+                </p>
+
+            </div>
+
+        </section>
+
+
+    <section class="py-16 bg-black text-white text-center">
+        <div class="max-w-3xl mx-auto">
+            <p class="text-lg">
+                Somos una banda versátil con amplia experiencia en eventos, brindando shows únicos, inolvidables y adaptados a cada ocasión.<br>
+                ¿Por qué elegirnos?<br>
+                ✔ Experiencia en todo tipo de eventos<br>
+                ✔ Repertorio variado<br>
+                ✔ Sonido profesional<br>
+                ✔ Adaptación al cliente
+            </p>
+        </div>
+    </section>
+
+
+    <section class="py-16 bg-gray-900 text-white">
+        <div class="max-w-6xl mx-auto px-4">
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <!-- HISTORIA Y MISIÓN -->
+                <div class="bg-black p-6 rounded-xl border border-gray-800 shadow-lg">
+                    <h3 class="text-xl font-bold text-purple-400 mb-3">Historia y Misión</h3>
+                    <p class="text-gray-300">
+                        Uli y los Cómplices Fantasmas nace con el objetivo de llevar música en vivo a otro nivel,
+                        combinando energía, calidad y conexión con el público. Nuestra misión es transformar cada evento
+                        en una experiencia inolvidable.
+                    </p>
+                </div>
+
+                <!-- INFORMACIÓN GENERAL -->
+                <div class="bg-black p-6 rounded-xl border border-gray-800 shadow-lg">
+                    <h3 class="text-xl font-bold text-purple-400 mb-3">Información</h3>
+                    <p class="text-gray-300">
+                        Nos especializamos en shows en vivo para todo tipo de eventos: casamientos, fiestas privadas,
+                        eventos empresariales, bares y festivales. Adaptamos el repertorio según el público y el momento.
+                    </p>
+                </div>
+
+                <!-- VALORES -->
+                <div class="bg-black p-6 rounded-xl border border-gray-800 shadow-lg">
+                    <h3 class="text-xl font-bold text-purple-400 mb-3">Valores</h3>
+                    <p class="text-gray-300">
+                        Profesionalismo, compromiso, pasión por la música y respeto por cada cliente.
+                        Creemos en brindar siempre lo mejor en cada presentación.
+                    </p>
+                </div>
+
+                <!-- EXPERIENCIA -->
+                <div class="bg-black p-6 rounded-xl border border-gray-800 shadow-lg">
+                    <h3 class="text-xl font-bold text-purple-400 mb-3">Experiencia</h3>
+                    <p class="text-gray-300">
+                        Contamos con amplia trayectoria en escenarios y eventos, logrando generar un ambiente festivo
+                        y dinámico que hace que nadie se quede sin bailar.
+                    </p>
+                </div>
+
+                <!-- EXPERIENCIA AL CLIENTE -->
+                <div class="bg-black p-6 rounded-xl border border-gray-800 shadow-lg md:col-span-2">
+                    <h3 class="text-xl font-bold text-purple-400 mb-3">Experiencia al Cliente</h3>
+                    <p class="text-gray-300">
+                        Nos adaptamos a cada evento de forma personalizada, escuchando las necesidades del cliente
+                        y asegurando que cada detalle musical esté a la altura del momento.
+                    </p>
+                </div>
+
+                <!-- RECONOCIMIENTO -->
+                <div class="bg-black p-6 rounded-xl border border-gray-800 shadow-lg md:col-span-2">
+                    <h3 class="text-xl font-bold text-purple-400 mb-3">Reconocimiento</h3>
+                    <p class="text-gray-300">
+                        A lo largo de nuestra trayectoria hemos sido elegidos en múltiples eventos por nuestra energía,
+                        calidad musical y capacidad de generar una verdadera fiesta.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

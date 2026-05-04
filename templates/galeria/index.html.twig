@@ -1,0 +1,401 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <!-- PORTADA -->
+    <section class="h-[60vh] bg-cover bg-center flex items-center justify-center mt-20"
+    style="background-image: url('{{ asset('imagenes/galeria.png') }}');">
+    </section>
+
+    <!-- TABS -->
+    <section class="bg-black text-white py-12">
+
+        <div class="max-w-6xl mx-auto px-4">
+
+            <!-- BOTONES -->
+            <div class="flex justify-center gap-6 mb-10">
+                <button onclick="showTab('canciones')" class="tab-btn">🎧 Canciones</button>
+                <button onclick="showTab('videos')" class="tab-btn">📺 Videos</button>
+                <button onclick="showTab('fotos')" class="tab-btn">📸 Fotos</button>
+            </div>
+
+            <!-- CANCIONES -->
+            <div id="canciones" class="tab-content">
+
+                <div class="flex flex-wrap justify-center gap-4 mb-10">
+
+                    <button onclick="filtrar_cancion('all', this)" class="filtro-btn">Todos</button>
+
+                    <button onclick="filtrar_cancion('cumbia', this)" class="filtro-btn">Cumbia</button>
+                    <button onclick="filtrar_cancion('cuarteto', this)" class="filtro-btn">Cuarteto</button>
+                    <button onclick="filtrar_cancion('folklore', this)" class="filtro-btn">Folklore</button>
+                    <button onclick="filtrar_cancion('chamame', this)" class="filtro-btn">Chamame</button>
+                    <button onclick="filtrar_cancion('paso_doble', this)" class="filtro-btn">Paso Doble</button>
+                    <button onclick="filtrar_cancion('latinos', this)" class="filtro-btn">Latinos</button>
+                    <button onclick="filtrar_cancion('rock_nacional', this)" class="filtro-btn">Rock Nacional</button>
+                    <button onclick="filtrar_cancion('melodicos', this)" class="filtro-btn">Melódicos</button>
+                </div>
+                
+                <div class="grid md:gap-6">
+
+                    <div class="space-y-6">
+
+                        {% for cancion in canciones %}
+                            <div class="bg-gray-900 p-4 rounded-lg relative group cancion-item transition-all duration-300"
+                            data-tipo="{{ cancion.tipo }}">
+                                <h3 class="text-lg font-semibold mb-2">{{ cancion.nombre }}</h3>
+
+                                <audio controls controlsList="nodownload" preload="metadata" class="w-full">
+                                    <source src="{{ asset('uploads/cancion/' ~ cancion.audio) }}" type="audio/mpeg">
+                                </audio>
+                            </div>
+                        
+                        {% else %}
+                        <div class="col-span-full text-center py-12 animate-fade-in">
+                            <p class="text-5xl mb-4">🎧</p>
+                            <p class="text-gray-400 text-lg">Todavía no hay canciones cargadas</p>
+                            <p class="text-gray-600 text-sm mt-2">Pronto vas a poder escuchar a la banda</p>
+                        </div>
+                    {% endfor %}
+
+                    </div>
+
+                </div>
+
+                <p id="noResultadosCancion"
+                class="text-center text-gray-400 mt-6 hidden">
+                    No hay canciones en esta categoría
+                </p>
+            </div>
+            <!-- VIDEOS -->
+            <div id="videos" class="tab-content hidden">
+                <div class="grid md:grid-cols-2 gap-6">
+
+                    {% for video in videos %}
+                        {% set videoId = video.url|split('v=')[1]|split('&')[0] %}
+
+                        <div class="bg-gray-900 p-4 rounded-lg">
+                            <h3 class="mb-2 font-semibold">{{ video.nombre }}</h3>
+
+                            <iframe class="w-full h-56 rounded"
+                                src="https://www.youtube.com/embed/{{ videoId }}"
+                                allowfullscreen>
+                            </iframe>
+
+                            <p class="text-sm text-gray-400 mt-2">{{ video.info }}</p>
+                        </div>
+
+                    {% else %}
+                        <div class="col-span-full text-center py-12 animate-fade-in">
+                            <p class="text-5xl mb-4">📺</p>
+                            <p class="text-gray-400 text-lg">Todavía no hay videos cargados</p>
+                            <p class="text-gray-600 text-sm mt-2">Pronto vas a poder ver a la banda en acción</p>
+                        </div>
+                    {% endfor %}
+
+                </div>
+            </div>
+
+            <!-- FOTOS -->
+            <div id="fotos" class="tab-content hidden">
+                <div class="flex flex-wrap justify-center gap-4 mb-10">
+
+                    <button onclick="filtrar_foto('all', this)" class="filtro-btn">Todos</button>
+
+                    <button onclick="filtrar_foto('promociones', this)" class="filtro-btn">Promociones</button>
+                    <button onclick="filtrar_foto('shows', this)" class="filtro-btn">Shows en vivo</button>
+                    <button onclick="filtrar_foto('eventos', this)" class="filtro-btn">Eventos</button>
+                    <button onclick="filtrar_foto('casamientos', this)" class="filtro-btn">Casamientos</button>
+                    <button onclick="filtrar_foto('cumpleanos', this)" class="filtro-btn">Cumpleaños</button>
+                    <button onclick="filtrar_foto('backstage', this)" class="filtro-btn">Backstage</button>
+                    <button onclick="filtrar_foto('escenario', this)" class="filtro-btn">Escenario</button>
+                    <button onclick="filtrar_foto('publico', this)" class="filtro-btn">Público</button>
+                    <button onclick="filtrar_foto('flyers', this)" class="filtro-btn">Flyers</button>
+                    <button onclick="filtrar_foto('institucional', this)" class="filtro-btn">Institucional</button>
+
+                </div>
+                
+                <div class="grid md:grid-cols-3 gap-6">
+                    
+
+                    {% for foto in fotos %}
+                        <div class="relative group foto-item transition-all duration-300" data-categoria="{{ foto.categoria }}">
+
+                            <img src="{{ asset('uploads/fotos/' ~ foto.imagen) }}"
+                            loading="lazy"
+                            decoding="async"
+                            class="w-full h-48 object-cover rounded-lg cursor-zoom-in hover:scale-105 transform transition duration-300 ease-out"
+                            onclick="openModal({{ loop.index0 }})">
+
+                            <!-- HOVER -->
+                            <div class="text-center absolute inset-0 pointer-events-none bg-black/90 opacity-0 group-hover:opacity-100 transition flex flex-col justify-center p-4 rounded-lg">
+                                <h3 class="text-white font-bold text-lg">{{ foto.nombre }}</h3>
+                                <p class="text-gray-300 text-sm">{{ foto.info }}</p>
+                            </div>
+
+                        </div>
+                    {% else %}
+                        <div class="col-span-full text-center py-12 animate-fade-in">
+                            <p class="text-5xl mb-4">📸</p>
+                            <p class="text-gray-400 text-lg">Todavía no hay fotos cargadas</p>
+                            <p class="text-gray-600 text-sm mt-2">Pronto vas a poder ver fotos de la banda</p>
+                        </div>
+                    {% endfor %}
+
+                </div>
+                <p id="noResultadosFotos"
+                class="text-center text-gray-400 mt-6 hidden">
+                    No hay Fotos en esta categoría
+                </p>
+                
+            </div>
+
+        </div>
+
+    </section>
+
+        <div id="modal"
+        onclick="if(event.target.id === 'modal') closeModal()"
+        class="fixed inset-0 bg-black/90 hidden items-center justify-center z-50">
+
+            <div class="relative max-w-5xl w-full px-4">
+
+                <!-- CERRAR -->
+                <button onclick="closeModal()"
+                    class="absolute top-2 right-4 text-white text-4xl hover:text-purple-400 -mt-10">
+                    ✕
+                </button>
+
+                <!-- IMAGEN -->
+                <img id="modalImg"
+                    class="w-full max-h-[85vh] object-contain rounded-lg transform scale-95 transition duration-300">
+
+                <!-- IZQUIERDA -->
+                <button onclick="prevImage()"
+                    class="absolute left-2 top-1/2 -translate-y-1/2 text-white text-4xl hover:text-purple-400">
+                    ‹
+                </button>
+
+                <!-- DERECHA -->
+                <button onclick="nextImage()"
+                    class="absolute right-2 top-1/2 -translate-y-1/2 text-white text-4xl hover:text-purple-400">
+                    ›
+                </button>
+
+            </div>
+        </div>
+
+    <!-- JS -->
+    <script>
+        const fotos = [
+            {% for foto in fotos %}
+                {
+                    src: "{{ asset('uploads/fotos/' ~ foto.imagen) }}",
+                    title: "{{ foto.nombre|e('js') }}",
+                    info: "{{ foto.info|e('js') }}"
+                },
+            {% endfor %}
+        ];
+
+        let currentIndex = 0;
+
+        function openModal(index) {
+            currentIndex = index;
+
+            const modal = document.getElementById('modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+
+            updateModal();
+
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('modal');
+
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+
+            document.body.style.overflow = 'auto';
+        }
+
+        function updateModal() {
+            const img = document.getElementById('modalImg');
+
+            // preload imagen actual
+            const newImg = new Image();
+            newImg.src = fotos[currentIndex].src;
+
+            newImg.onload = () => {
+                img.src = newImg.src;
+            };
+
+            // preload siguiente y anterior
+            preloadNearby();
+
+            // info
+            document.getElementById('modalTitle').innerText = fotos[currentIndex].title;
+            document.getElementById('modalInfo').innerText = fotos[currentIndex].info;
+        }
+
+        function preloadNearby() {
+            let next = (currentIndex + 1) % fotos.length;
+            let prev = (currentIndex - 1 + fotos.length) % fotos.length;
+
+            new Image().src = fotos[next].src;
+            new Image().src = fotos[prev].src;
+        }
+
+        function nextImage() {
+            currentIndex = (currentIndex + 1) % fotos.length;
+            updateModal();
+        }
+
+        function prevImage() {
+            currentIndex = (currentIndex - 1 + fotos.length) % fotos.length;
+            updateModal();
+        }
+
+        // teclado
+        document.addEventListener('keydown', function(e) {
+            if (e.key === "Escape") closeModal();
+            if (e.key === "ArrowRight") nextImage();
+            if (e.key === "ArrowLeft") prevImage();
+        });
+
+        // tabs
+        function showTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(tab).classList.remove('hidden');
+        }
+
+        //filtro de fotos
+
+        function filtrar_foto(categoria, btn) {
+            const items = document.querySelectorAll('.foto-item');
+            const botones = document.querySelectorAll('#fotos .filtro-btn');
+            const mensaje = document.getElementById('noResultadosFotos');
+
+            items.forEach(item => {
+                item.classList.add('opacity-0', 'scale-95');
+            });
+
+            setTimeout(() => {
+                let visibles = 0;
+
+                items.forEach((item, i) => {
+                    if (categoria === 'all' || item.dataset.categoria === categoria) {
+                        item.classList.remove('hidden');
+                        visibles++;
+
+                        setTimeout(() => {
+                            item.classList.remove('opacity-0', 'scale-95');
+                            item.classList.add('opacity-100', 'scale-100');
+                        }, i * 50);
+                    } else {
+                        item.classList.add('hidden');
+                    }
+                });
+
+                mensaje.classList.toggle('hidden', visibles !== 0);
+
+            }, 200);
+
+            // botón activo
+            botones.forEach(b => b.classList.remove('bg-purple-600'));
+            if (btn) btn.classList.add('bg-purple-600');
+        }
+
+        //filtro de canciones
+
+        function filtrar_cancion(tipo, btn) {
+            const items = document.querySelectorAll('.cancion-item');
+            const botones = document.querySelectorAll('#canciones .filtro-btn');
+            const mensaje = document.getElementById('noResultadosCancion');
+
+            items.forEach(item => {
+                item.classList.add('opacity-0', 'scale-95');
+            });
+
+            setTimeout(() => {
+                let visibles = 0;
+
+                items.forEach((item, i) => {
+                    if (tipo === 'all' || item.dataset.tipo === tipo) {
+                        item.classList.remove('hidden');
+                        visibles++;
+
+                        setTimeout(() => {
+                            item.classList.remove('opacity-0', 'scale-95');
+                            item.classList.add('opacity-100', 'scale-100');
+                        }, i * 50); // 🔥 animación escalonada
+                    } else {
+                        item.classList.add('hidden');
+                    }
+                });
+
+                mensaje.classList.toggle('hidden', visibles !== 0);
+
+            }, 200);
+
+            // botón activo
+            botones.forEach(b => b.classList.remove('bg-purple-600'));
+            if (btn) btn.classList.add('bg-purple-600');
+        }
+    </script>
+
+    <!-- ESTILO -->
+    <style>
+        .tab-btn {
+            background: #1f1f1f;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+        .tab-btn:hover {
+            background: #7c3aed;
+        }
+
+        .filtro-btn {
+            background: #1f1f1f;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: 0.3s;
+            color: white;
+        }
+
+        .filtro-btn:hover {
+            background: #7c3aed;
+        }
+
+        .fade-out {
+            opacity: 0;
+            transform: scale(0.95);
+            transition: all 0.3s ease;
+        }
+
+        .fade-in {
+            opacity: 1;
+            transform: scale(1);
+            transition: all 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease;
+        }
+        
+    </style>
+
+{% endblock %}

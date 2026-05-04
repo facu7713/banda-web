@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Uli y los Cómplices Fantasmas{% endblock %}</title>
+
+    <!-- Tailwind (CDN para empezar rápido) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+
+    <body class="bg-black text-white font-[Poppins]">
+
+        <!-- HEADER -->
+        {% include 'components/header.html.twig' %}
+
+        <!-- CONTENIDO -->
+        {% block body %}{% endblock %}
+
+        <!-- FOOTER -->
+        {% include 'components/footer.html.twig' %}
+
+        <script>
+            function toggleMenu() {
+                const menu = document.getElementById('mobileMenu');
+
+                if (menu.classList.contains('hidden')) {
+                    menu.classList.remove('hidden');
+                    menu.classList.add('flex');
+                } else {
+                    menu.classList.add('hidden');
+                    menu.classList.remove('flex');
+                }
+            }
+        </script>
+    </body>
+</html>
