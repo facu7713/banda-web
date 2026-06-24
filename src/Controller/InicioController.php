@@ -25,7 +25,7 @@ class InicioController extends AbstractController
     {
         $eventos = $eventoRepository->findAll();
 
-        return $this->render('inicio/index.html.twig', [
+        return $this->render('sitio_publico/inicio/index.html.twig', [
             'eventos' => $eventos,
         ]);
     }
@@ -52,7 +52,7 @@ class InicioController extends AbstractController
             }
         }
 
-        return $this->render('shows/index.html.twig', [
+        return $this->render('sitio_publico/shows/index.html.twig', [
             'proximos' => $proximos,
             'realizados' => $realizados
         ]);
@@ -67,7 +67,7 @@ class InicioController extends AbstractController
         $videos = $videoRepository->findBy([], ['fecha' => 'ASC']);
         $fotos = $fotoRepository->findBy([], ['fecha' => 'ASC']);
 
-        return $this->render('galeria/index.html.twig', [
+        return $this->render('sitio_publico/galeria/index.html.twig', [
             'canciones' => $canciones,
             'videos' => $videos,
             'fotos' => $fotos,
@@ -77,12 +77,12 @@ class InicioController extends AbstractController
     #[Route('/banda', name: 'banda')]
     public function banda()
     {
-        return $this->render('banda/index.html.twig');
+        return $this->render('sitio_publico/banda/index.html.twig');
     }
 
     #[Route('/contacto', name: 'contacto')]
     public function contacto()
     {
-        return $this->render('contacto/index.html.twig');
+        return $this->render('sitio_publico/contacto/index.html.twig');
     }
 }

@@ -44,7 +44,7 @@ class ComentarioController extends AbstractController
             ['fechaPublicacion' => 'DESC']
         );
 
-        return $this->render('comentario/index.html.twig', [
+        return $this->render('sitio_publico/comentario/index.html.twig', [
             'form' => $form->createView(),
             'comentarios' => $comentarios
         ]);
